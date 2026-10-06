@@ -420,6 +420,41 @@ add('전제-탭', '한눈에 보기 전제 · 5장 만들지 않는 것', '화�
 add('완료-1', '5장 완료 기준 1', '처음 연 사람이 ①→②→③을 3분 안에 끝낸다', '사람 확인: 누르는 횟수는 호칭 입력 + 9번(직무, 다음, 다음, 확정 5번, 시작)이면 끝나지만, 3분 안에 끝나는지는 처음 보는 사람에게 시켜 봐야 압니다');
 add('완료-3', '5장 완료 기준 3', '순환 버튼 네 상태가 흑백에서도 구분된다', '사람 확인: 모양이 서로 다른 것은 ③-5a에서 확인했습니다. 실제 흑백 화면과 색약 시뮬레이션은 눈으로 봐야 합니다');
 add('완료-9', '5장 완료 기준 9', '비행기 모드에서 다시 열어도 동작, 네트워크 탭에 외부 요청 없음', '사람 확인: 크로미움에서는 기술-1로 확인했습니다. Vercel 주소와 실제 휴대폰(사파리 포함)은 배포 뒤 확인합니다');
+// 글자가 배경에 묻히는 곳 찾기: 단색 배경 위의 글자마다 명도 대비를 잰다. 그림·그러데이션 위의 글자는 잴 수 없어 건너뛴다.
+const lowContrast = p => p.evaluate(() => {
+  const rgb = c => { const m = c.match(/[\d.]+/g).map(Number); return { r: m[0], g: m[1], b: m[2], a: m.length > 3 ? m[3] : 1 } };
+  const lum = c => { const f = v => { v /= 255; return v <= .03928 ? v / 12.92 : Math.pow((v + .055) / 1.055, 2.4) }; return .2126 * f(c.r) + .7152 * f(c.g) + .0722 * f(c.b) };
+  const bad = []; let n = 0, skip = 0;
+  document.querySelectorAll('#app *, #sheets *').forEach(el => {
+    const own = [...el.childNodes].filter(x => x.nodeType === 3).map(x => x.textContent).join('').trim(); if (!own) return;
+    const r = el.getBoundingClientRect(), cs = getComputedStyle(el); if (r.width < 2 || r.height < 2 || cs.visibility === 'hidden' || +cs.opacity < .1) return;
+    if (el.closest('[disabled],[aria-disabled="true"],svg,.sr')) return;
+    let bg = null, op = 1;
+    for (let e = el; e; e = e.parentElement) { const s = getComputedStyle(e); op *= +s.opacity; if (s.backgroundImage !== 'none' || e.querySelector(':scope > svg[class*="sky"], :scope > svg.scene')) { bg = null; break }
+      const c = rgb(s.backgroundColor); if (c.a > .9) { bg = c; break } if (c.a > .05) { bg = null; break } }
+    if (!bg || op < .5) { skip++; return } n++;
+    const fg = rgb(cs.color), a = lum(fg), b = lum(bg), ratio = (Math.max(a, b) + .05) / (Math.min(a, b) + .05);
+    if (ratio < 3) bad.push(own.slice(0, 14) + ' (' + ratio.toFixed(1) + ':1)');
+  });
+  return { bad, n, skip };
+});
+add('화면-글자', '5장 토큰 · 접근성', '버튼과 글자가 배경색에 묻히지 않는다(단색 배경 위 글자 대비 3:1 이상). 확인 창의 ‘취소’·‘지우기’ 포함', async () => {
+  const seen = [], bad = []; let n = 0, skip = 0;
+  const at = async (p, name) => { await p.waitForTimeout(60); const r = await lowContrast(p); n += r.n; skip += r.skip; seen.push(name); r.bad.forEach(x => bad.push(name + ': ' + x)) };
+  let p = await open(); await at(p, '① 시작'); await p.click('[data-a="samples"]'); await at(p, '샘플 고르기'); await p.click('[data-a="closeSheet"][data-x]').catch(() => p.keyboard.press('Escape'));
+  p = await open(); await setup(p, { name: '밤톨', stopAt3: true }); await at(p, '② 확인'); await p.click('[data-a="dStart"]'); await at(p, '③ 오늘');
+  await cyc(p, 'i01'); await cyc(p, 'i02'); await cyc(p, 'i02'); await cyc(p, 'i03'); await cyc(p, 'i03'); await cyc(p, 'i03'); await at(p, '③ 체크 세 상태');
+  await p.click('[data-a="menu"]'); await at(p, '⋯ 메뉴'); await p.click('[data-a="reset"]'); await at(p, '삭제 확인 창');
+  const btn = await p.$$eval('.safe .btn', x => x.map(e => e.textContent.trim() + '/' + getComputedStyle(e).color + '/' + getComputedStyle(e).backgroundColor));
+  assert.deepEqual(btn, ['취소/rgb(0, 29, 57)/rgb(255, 255, 255)', '지우기/rgb(255, 255, 255)/rgb(0, 29, 57)'], '확인 창 버튼 두 개의 글자·배경');
+  await p.click('.safe [data-a="closeSheet"]'); await p.click('[data-a="toClose"]'); await at(p, '④ 마무리(고르기 전)'); await p.click('[data-a="cond"][data-v="4"]'); await at(p, '④ 마무리(고른 뒤)');
+  p = await open(); await p.click('[data-a="job"][data-j="회계·감사"]'); await p.click('[data-a="startNext"]'); await at(p, '② 중요도'); await p.click('[data-a="dNext1"]'); await at(p, '② 항목 고르기');
+  p = await open(); await sample(p, 'dotori'); await at(p, '③ 샘플(실험 배너)'); await p.click('[data-a="menu"]'); await at(p, '⋯ 메뉴(샘플)'); await p.click('[data-a="closeSheet"][data-x]');
+  await p.click('[data-a="tab"][data-v="report"]'); await at(p, '⑤ 지난주'); await p.click('[data-a="wk"][data-v="-1"]'); await at(p, '⑤ 2주 전'); await p.click('[data-a="wk"][data-v="1"]'); await p.click('[data-a="wk"][data-v="1"]'); await at(p, '⑤ 이번 주');
+  p = await open(); await sample(p, 'gureum'); await p.waitForTimeout(200); assert.equal(await p.locator('.safe').count(), 1); await at(p, '안전 카드');
+  assert.deepEqual(bad, [], '대비가 낮은 글자');
+  return `${seen.length}개 화면·창(${seen.join(', ')})에서 글자 ${n}곳의 대비가 모두 3:1 이상. 그림·그러데이션 위 글자 ${skip}곳은 자동으로 잴 수 없어 화면 캡처로 봄`;
+});
 add('그림', '1장 ④ 아래 · 5장 토큰', '완료 화면 일러스트는 디자인 담당의 시안(06-2_마무리_완료.png)을 그대로 쓴다. Pretendard', '사람 확인: 받은 파일에는 글자 없는 그림 원본과 글꼴 파일이 없어, 시안을 보고 다시 그린 그림과 공식 배포 글꼴을 씁니다(2026-10-06 사용자 결정: 없으면 그대로)');
 
 (async () => {
@@ -429,7 +464,7 @@ add('그림', '1장 ④ 아래 · 5장 토큰', '완료 화면 일러스트는 �
   for (const c of C) { if (only && !c.id.includes(only)) continue;
     if (typeof c.run === 'string') { manual++; rows.push([c, '사람 확인', c.run.replace(/^사람 확인: /, '')]); continue }
     try { const note = await c.run(); pass++; rows.push([c, '통과', note || '']); console.log('통과', c.id) }
-    catch (e) { fail++; rows.push([c, '어긋남', String(e.message).split('\n')[0].slice(0, 200)]); console.log('어긋남', c.id, e.message.split('\n')[0]) }
+    catch (e) { fail++; rows.push([c, '어긋남', String(e.message).split('\n')[0].slice(0, 200)]); console.log('어긋남', c.id, e.message.split('\n').slice(0,3).join(' / ')) }
     for (const x of browser.contexts()) await x.close(); }
   const extra = []; if (external.length) { fail++; extra.push('외부 요청 ' + external.length + '건: ' + [...new Set(external)].slice(0, 3).join(', ')) } if (pageErrors.length) { fail++; extra.push('화면 오류 ' + pageErrors.length + '건: ' + [...new Set(pageErrors)].slice(0, 3).join(' | ')) }
   console.log(`통과 ${pass} · 어긋남 ${fail} · 사람 확인 ${manual}` + (extra.length ? ' · ' + extra.join(' · ') : ''));

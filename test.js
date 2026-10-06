@@ -173,5 +173,9 @@ let pass=0;const ok=(c,m)=>{assert(c,m);pass++;};
   const hits=[];for(const f of up){if(/\.(png|woff2)$/.test(f)||f==='package-lock.json'||f==='test.js'||f==='fonts/LICENSE.txt')continue;const s=fs.readFileSync(f,'utf8');
     for(const [n,re] of [['key',SECRET],['mail',MAIL],['phone',PHONE],['path',PATH]]){const m=re.exec(s);if(m)hits.push(f+':'+n+':'+m[0])}}
   ok(hits.length===0,'no secrets or personal info in uploaded files: '+hits.slice(0,5).join(' | '));
+  // 확인 창: 버튼 글자가 배경에 묻히지 않게 색을 규칙으로만 정한다(인라인 색 금지)
+  { const css=fs.readFileSync('src/style.css','utf8'),js=fs.readFileSync('src/app.js','utf8');
+    ok(/\.safe \.btn\.solid\{background:var\(--ink\);color:#fff\}/.test(css)&&/<button class="btn solid" data-a="resetYes">지우기<\/button>/.test(js),'confirm dialog: delete button has visible label');
+    ok(!/<button[^>]*style="[^"]*(background|color)/.test(js),'no inline colors on buttons'); }
   console.log('PASS',pass);
 })().catch(e=>{console.error('FAIL after',pass,e.stack.split('\n').slice(0,3).join(' | '));process.exit(1)});

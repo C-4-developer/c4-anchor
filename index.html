@@ -468,6 +468,7 @@ h2{font-size:17px;font-weight:700;line-height:24px;margin:0}
 .safe li a{color:var(--ink);font-weight:800;white-space:nowrap}
 .safe li span:last-child{font-weight:800;text-align:right}
 .safe .btn{background:#fff;color:var(--ink);border:1.5px solid var(--ink)}
+.safe .btn.solid{background:var(--ink);color:#fff}
 .toast{position:fixed;left:50%;bottom:calc(132px + env(safe-area-inset-bottom,0px));transform:translateX(-50%);background:var(--ink);color:#fff;font-size:13px;font-weight:600;padding:10px var(--space-4);border-radius:var(--radius-pill);z-index:30;max-width:calc(100% - 40px);text-align:center}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 @media (min-width:480px){body{padding:0}.app{box-shadow:0 0 0 1px var(--line)}}
@@ -899,7 +900,7 @@ function renderSheet(){var s=S.sheet,h='',ae=document.activeElement,fk=ae&&sheet
     if(s.type==='samples'){h='<div class="scrim" data-a="closeSheet"><div class="bs" role="dialog" aria-modal="true" aria-label="샘플 고르기"><h2>샘플로 둘러보기</h2><p class="sub" style="margin:0">가상의 기록이에요. 오늘 날짜에 맞춰 채워져요.</p>'+
       D.samples.map(function(x){return '<button class="scard" data-a="pickSample" data-id="'+x.id+'"><span class="av" aria-hidden="true">'+esc(x.name.charAt(0))+'</span><span><b>'+esc(x.name)+'</b><span class="tiny">'+esc(x.job)+' · '+esc(x.desc||SDESC[x.id]||'')+'</span></span></button>'}).join('')+'</div></div>'}
     else if(s.type==='menu'){var p=profile();h='<div class="scrim" data-a="closeSheet"><div class="bs menu" role="dialog" aria-modal="true" aria-label="메뉴"><button data-a="csv">내 기록 내보내기 (CSV)</button>'+(p&&p.mode==='sample'?'<button data-a="leave">샘플 나가기</button>':'<button data-a="reset">처음부터 다시</button>')+'<button data-a="closeSheet" data-x="1">닫기</button></div></div>'}
-    else if(s.type==='confirm'){h='<div class="scrim center"><div class="safe" role="alertdialog" aria-modal="true" aria-label="기록 삭제 확인"><h2>모든 기록을 지우고 처음부터 다시 할까요?</h2><p>이 기기에 저장된 항목과 기록이 모두 지워져요. 되돌릴 수 없어요.</p><div class="row"><button class="btn" style="background:#fff;color:var(--ink);border:1.5px solid var(--ink)" data-a="closeSheet" data-x="1">취소</button><button class="btn" style="background:var(--ink)" data-a="resetYes">지우기</button></div></div></div>'}
+    else if(s.type==='confirm'){h='<div class="scrim center"><div class="safe" role="alertdialog" aria-modal="true" aria-label="기록 삭제 확인"><h2>모든 기록을 지우고 처음부터 다시 할까요?</h2><p>이 기기에 저장된 항목과 기록이 모두 지워져요. 되돌릴 수 없어요.</p><div class="row"><button class="btn" data-a="closeSheet" data-x="1">취소</button><button class="btn solid" data-a="resetYes">지우기</button></div></div></div>'}
     else if(s.type==='target'){var t=TPL[s.tpl],o=targetOptions(t);
       h='<div class="scrim" data-a="closeSheet"><div class="bs" role="dialog" aria-modal="true" aria-label="기준값 수정"><h2>기준값 바꾸기</h2><p class="sub" style="margin:0">'+esc(qText(s.tpl,s.value))+'</p>'+
       (o.free?'<input class="inp" id="tfree" maxlength="12" value="'+esc(s.value)+'" style="margin:16px 0 6px" aria-label="기준값">':
