@@ -1,0 +1,14 @@
+node_modules
+.DS_Store
+# 예전 구조의 흔적 (지금은 index.html 과 fonts/ 가 맨 바깥에 있다)
+dist/
+assets/
+tools/reconstructed_demo_data.json
+# 공개 저장소에 올리지 않는 팀 문서: 기획안 원본, 디자인 시안, 작업 메모
+docs/spec_v2.0.md
+docs/spec_v2.0.html
+docs/design/design.md
+docs/design/screens.md
+docs/design/copy.json
+docs/design/screens/
+PROMPT.md

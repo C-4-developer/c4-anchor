@@ -1,0 +1,7 @@
+# Vercel에는 앱이 도는 데 필요한 것만 올린다: 첫 화면, 오프라인 저장용 파일, 글꼴.
+# package.json 도 올리지 않으므로 Vercel은 설치·빌드 없이 파일을 그대로 내보낸다(정적 배포).
+/*
+!index.html
+!sw.js
+!fonts
+!vercel.json

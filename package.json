@@ -1,0 +1,13 @@
+{
+  "name": "anchor-demo",
+  "version": "0.1.0",
+  "private": true,
+  "description": "앵커(Anchor) 무대 시연판 - 정적 웹앱, 서버·DB·외부 요청 없음",
+  "scripts": {
+    "build": "node build.js",
+    "test": "node build.js && node test.js",
+    "check": "node build.js && node tools/check_spec.js",
+    "data": "node -e \"console.log('data/anchor_demo_data.json 은 팀 원본이라 다시 만들지 않습니다. 예전 재구성 스크립트는 tools/ 에 기록용으로 남아 있고, 결과는 tools/reconstructed_demo_data.json 에만 씁니다.')\""
+  },
+  "devDependencies": { "jsdom": "^24.0.0" }
+}

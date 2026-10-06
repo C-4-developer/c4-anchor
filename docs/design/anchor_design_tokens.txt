@@ -1,0 +1,442 @@
+﻿================================================================
+ 앵커 Anchor · 바다 디자인 토큰
+ 버전 1 · 2026.10.03
+ 근거: 최종 기획안 v1.1 S01–S09 + 디자인 희망사항 이미지
+       (바다 색깔 1·2·3, 꺾은 선 그래프, 상태 표시, 타이머,
+        바다 초기 화면, 타임라인 지도 1·2, 고래 그래프)
+ 테마: light = 물가(라이트), dark = 심해(다크)
+ 화면 분위기: 열 때(S01–S05) = 낮의 푸른 바다, 닫을 때(S06–S10) = 노을
+ 영역 = 씨글라스, 오각형 그래프 = 조개 펜던트, 한 줄 메모 = 메시지 보틀
+ 표기: 이름 | 라이트 | 다크 | 용도   (다크 칸이 "-"면 라이트와 같음)
+================================================================
+
+[1. 원색 (레퍼런스 컬러칩)]
+ocean-950              | #001D39                | -                      | 바다 색깔 1 · 가장 깊은 바다. 라이트 본문 글자, 다크 바탕, 깊이 5단계.
+ocean-800              | #0A4174                | -                      | 바다 색깔 1 · 깊은 바다. 주 버튼, 재정 영역, 깊이 4단계.
+ocean-600              | #49769F                | -                      | 바다 색깔 1 · 컨디션 4. 흰 바탕 4.8:1.
+teal-600               | #4E8EA2                | -                      | 바다 색깔 1 · 잔잔한 물. 회복 영역, 깊이 3단계, 물결 게이지 앞 파도, 라이트 그래프 선.
+teal-400               | #6EA2B3                | -                      | 바다 색깔 1 · 컨디션 3, 깊은 카드 위 게이지 링. 흰 바탕 글자 금지(2.8:1).
+sky-400                | #7BBDE8                | -                      | 바다 색깔 1 · 얕은 물. 깊이 2단계, 물결 게이지 뒤 파도, 다크 주 버튼.
+sky-200                | #BDD8E9                | -                      | 바다 색깔 1 · 물가. 깊이 1단계, 깊은 카드 위 보조 글자.
+navy-700               | #2F4156                | -                      | 바다 색깔 2 · Navy. 모래 바탕 위 보조 글자(9.2:1).
+teal-700               | #567C8D                | -                      | 바다 색깔 2 · Teal. 다크 컨디션 2.
+mist-200               | #C8D9E6                | -                      | 바다 색깔 2 · Sky Blue. 컨디션 1, 라이트 구분선 진한 쪽.
+sand-100               | #F5EFEB                | -                      | 바다 색깔 2 · Beige. 온보딩 모래사장 바탕.
+slate-500              | #5E7892                | -                      | 바다 색깔 3 · 라이트 보조 글자(흰 바탕 4.6:1), 해당 없음 선.
+mist-400               | #A7B7C6                | -                      | 바다 색깔 3 · 컨디션 2, 레이더 점선(중요도), 다크 보조 글자.
+shell-100              | #F3EFDF                | -                      | 바다 색깔 3 · 조개껍데기. 오늘의 카드 바탕.
+kelp-200               | #BDCFAA                | -                      | 바다 색깔 3 · 연한 해초. 해초 막대 잎.
+kelp-500               | #8E9E83                | -                      | 바다 색깔 3 · 해초. 성장 영역, 해초 막대 줄기.
+coral-500              | #E2683C                | -                      | 타임라인 지도 2 · 불가사리·산호. (영역 색은 씨글라스로 바뀜, 장식용)
+sun-400                | #F2C14E                | -                      | 타임라인 지도 1·2 · 햇빛·모래 노랑. 관계 영역.
+
+[2. 바탕 · 글자 · 선 · 버튼]
+bg                     | #FFFFFF                | #001D39                | 화면 바탕. 라이트 = 흰 물거품, 다크 = 심해.
+surface                | #F2F6F9                | #0B2A47                | 항목 카드, 입력 칸, 시트. 바탕 위 한 단계.
+surface-deep           | #001D39                | #0B2A47                | 리포트 위쪽 차트 카드(꺾은선·물결 게이지). 두 테마 모두 어두운 바다.
+surface-shell          | #F3EFDF                | #14324F                | 오늘의 카드(S06), 메모 카드(S10).
+surface-sand           | #F5EFEB                | #0B2A47                | 온보딩(S01–S04) 모래사장 쪽 바탕.
+ink                    | #001D39                | #EAF2F8                | 본문·제목·문항. 라이트 17:1, 다크 15:1.
+ink-muted              | #5E7892                | #A7B7C6                | 보조 글자·날짜·단위. 라이트 4.6:1, 다크 8.3:1. 모래 바탕 위에서는 ink-on-sand.
+ink-on-sand            | #2F4156                | #C8D9E6                | 모래 바탕(surface-sand) 위 보조 글자.
+ink-on-deep            | #FFFFFF                | -                      | surface-deep 위 제목·숫자.
+ink-on-deep-muted      | #BDD8E9                | -                      | surface-deep 위 보조 글자(11:1).
+line                   | #DCE6EE                | #1E3A57                | 카드 구분선, 표 선. 장식용(대비 기준 없음).
+line-control           | #5E7892                | #6EA2B3                | 입력 칸·토글 테두리 등 눈에 보여야 하는 선(3:1 이상).
+action                 | #0A4174                | #7BBDE8                | 주 버튼(하루 마무리, 저장하고 마무리, 이 실험으로 정하기).
+on-action              | #FFFFFF                | #001D39                | 주 버튼 글자. 두 테마 8:1 이상.
+focus                  | #4E8EA2                | #7BBDE8                | 키보드 포커스 링 2px.
+
+[3. 다섯 영역]
+domain-health          | #E47567                | -                      | 건강 · 씨글라스(산호빛 분홍 유리). 영역 아이콘 유리 조각, 했음 채움, 주간 줄, 지도 점.
+domain-grow            | #9BCF9A                | -                      | 성장 · 씨글라스(해초빛 초록 유리). 영역 아이콘 유리 조각, 했음 채움, 주간 줄, 지도 점.
+domain-rel             | #EDBC59                | -                      | 관계 · 씨글라스(호박빛 햇살 유리). 영역 아이콘 유리 조각, 했음 채움, 주간 줄, 지도 점.
+domain-rest            | #5BC0C3                | -                      | 회복 · 씨글라스(아쿠아 유리). 영역 아이콘 유리 조각, 했음 채움, 주간 줄, 지도 점.
+domain-money           | #A481C2                | -                      | 재정 · 씨글라스(라벤더 유리). 영역 아이콘 유리 조각, 했음 채움, 주간 줄, 지도 점.
+domain-health-strong   | #C53523                | #E47567                | 건강 ‘못 했음’ 테두리, 작은 글자. 색약 4종 시뮬레이션에서 흰 바탕 4.5:1 이상.
+domain-grow-strong     | #3E7F3C                | #9BCF9A                | 성장 ‘못 했음’ 테두리, 작은 글자. 색약 4종 시뮬레이션에서 흰 바탕 4.5:1 이상.
+domain-rel-strong      | #936810                | #EDBC59                | 관계 ‘못 했음’ 테두리, 작은 글자. 색약 4종 시뮬레이션에서 흰 바탕 4.5:1 이상.
+domain-rest-strong     | #2E7B7E                | #5BC0C3                | 회복 ‘못 했음’ 테두리, 작은 글자. 색약 4종 시뮬레이션에서 흰 바탕 4.5:1 이상.
+domain-money-strong    | #8B5EB1                | #A481C2                | 재정 ‘못 했음’ 테두리, 작은 글자. 색약 4종 시뮬레이션에서 흰 바탕 4.5:1 이상.
+domain-health-soft     | #E4756722              | #E4756729              | 건강 문항 카드 바탕(씨글라스 13% 농도).
+domain-grow-soft       | #9BCF9A22              | #9BCF9A29              | 성장 문항 카드 바탕(씨글라스 13% 농도).
+domain-rel-soft        | #EDBC5922              | #EDBC5929              | 관계 문항 카드 바탕(씨글라스 13% 농도).
+domain-rest-soft       | #5BC0C322              | #5BC0C329              | 회복 문항 카드 바탕(씨글라스 13% 농도).
+domain-money-soft      | #A481C222              | #A481C229              | 재정 문항 카드 바탕(씨글라스 13% 농도).
+on-domain              | #001D39                | -                      | 영역 채움 위 아이콘·체크(건강·성장·관계·회복). 5:1 이상.
+on-domain-money        | #001D39                | -                      | 재정 채움 위 아이콘·체크. 라벤더 유리 위 5.3:1.
+
+[4. 순환 버튼 상태]
+state-empty            | #7F95A9                | #8A9DB0                | 미입력 점선 원(1.4px). 흰 바탕 3.1:1.
+state-na               | #5E7892                | #A7B7C6                | 해당 없음 가로선. 원 없이 선만 그린다.
+
+[5. 물 깊이 (하루에 챙긴 영역 수) · 진행률 타임라인]
+depth-0                | #FFFFFF                | #001D39                | 0개 영역 날 · 물거품. 꽉 찬 크기의 빈 원/칸 + depth-0-line 테두리.
+depth-0-line           | #5E7892                | #6EA2B3                | 0개 영역 날 테두리.
+depth-1                | #BDD8E9                | #17456B                | 1개 영역 · 물가.
+depth-2                | #7BBDE8                | #2E6E97                | 2개 영역 · 얕은 물.
+depth-3                | #4E8EA2                | #4E8EA2                | 3개 영역 · 잔잔한 물.
+depth-4                | #0A4174                | #7BBDE8                | 4개 영역 · 깊은 바다.
+depth-5                | #001D39                | #BDD8E9                | 5개 영역 · 가장 깊은 바다(다크에서는 가장 밝게 빛남).
+depth-sand             | #D9CBBE                | #566779                | 기록 없는 날 · 물이 닿지 않은 모래. 반드시 작은 점(칸의 40%)으로.
+pixel-grid             | #E6EDF2                | #12324F                | 진행률 타임라인의 십자수 격자선.
+
+[6. 컨디션 1–5]
+cond-1                 | #C8D9E6                | #2F4156                | 컨디션 1 많이 지침.
+cond-2                 | #A7B7C6                | #567C8D                | 컨디션 2 지침.
+cond-3                 | #6EA2B3                | #6EA2B3                | 컨디션 3 보통.
+cond-4                 | #49769F                | #7BBDE8                | 컨디션 4 괜찮음.
+cond-5                 | #0A4174                | #BDD8E9                | 컨디션 5 아주 좋음.
+
+[7. 그래프 (꺾은선 · 물결 게이지 · 타이머 · 해초 막대)]
+chart-line             | #4E8EA2                | #6EA2B3                | 꺾은선(흰 바탕). 2px, 곡선.
+chart-line-deep        | #7BBDE8                | -                      | 꺾은선(surface-deep 위). 꺾은 선 그래프 레퍼런스.
+chart-point            | #BDD8E9                | -                      | 꺾은선 점(깊은 카드 위). 최고점은 반지름 5px.
+chart-dropline         | rgba(123,189,232,0.28) | -                      | 점에서 바닥까지 내리는 세로선.
+chart-area             | rgba(78,142,162,0.38)  | -                      | 선 아래 면 그라데이션 위쪽(아래로 0까지).
+chart-target           | #A7B7C6                | -                      | 레이더 점선 = 내가 정한 중요도.
+chart-lowdata          | #BDD8E9                | #5E7892                | 기록이 절반 미만인 달의 빈 원 테두리.
+gauge-shell            | #0A4174                | #0B2A47                | 물결 게이지 원 안쪽 빈 물.
+gauge-wave-back        | #7BBDE8                | -                      | 물결 게이지 뒤 파도(불투명도 0.75). 밝은 물빛.
+gauge-wave-front       | #4E8EA2                | -                      | 물결 게이지 앞 파도. 흰 숫자 3.7:1이라 숫자는 24px 이상 + 가장자리 그림자(halo).
+gauge-ring             | #6EA2B3                | #7BBDE8                | 타이머 진행 링, 게이지 테두리 링.
+gauge-track            | #1E3A57                | -                      | 타이머 남은 링 트랙.
+kelp-stem              | #8E9E83                | -                      | 해초 막대 줄기(요일별 컨디션).
+kelp-leaf              | #BDCFAA                | #8E9E83                | 해초 막대 잎.
+
+[8. 물가 그라데이션 (초기 화면)]
+shore-sand             | #F5EFEB                | #0B2A47                | 초기 화면 그라데이션 0% · 모래.
+shore-foam             | #FFFFFF                | #14324F                | 초기 화면 28% · 물거품.
+shore-shallow          | #BDD8E9                | #17456B                | 초기 화면 46% · 물가.
+shore-water            | #7BBDE8                | #2E6E97                | 초기 화면 72% · 얕은 물.
+shore-deep             | #4E8EA2                | #4E8EA2                | 초기 화면 100% · 먼바다.
+
+[9. 씨글라스 (영역 아이콘)]
+glass-rim-health       | #E37061                | -                      | 건강 씨글라스 조각 가장자리 선(3:1 이상).
+glass-rim-grow         | #51A64F                | -                      | 성장 씨글라스 조각 가장자리 선(3:1 이상).
+glass-rim-rel          | #C28915                | -                      | 관계 씨글라스 조각 가장자리 선(3:1 이상).
+glass-rim-rest         | #3CA0A3                | -                      | 회복 씨글라스 조각 가장자리 선(3:1 이상).
+glass-rim-money        | #A481C2                | -                      | 재정 씨글라스 조각 가장자리 선(3:1 이상).
+glass-clear            | #F4F6F6                | -                      | 빈 씨글라스(중요도 빈 칸) · 투명한 흰 유리.
+glass-clear-rim        | #A9B6C2                | -                      | 빈 씨글라스 가장자리.
+
+[10. 노을 (하루 마무리 · 리포트)]
+dusk-900               | #3E3A66                | -                      | 하루 마무리 이미지 · 노을 하늘 맨 위 · 리포트 카드 위쪽
+dusk-700               | #6E4E7E                | -                      | 하루 마무리 이미지 · 보랏빛 구름
+dusk-500               | #A3586F                | -                      | 하루 마무리 이미지 · 장밋빛 구름
+sunset-coral           | #E36854                | -                      | 하루 마무리 이미지 · 산호 노을
+sunset-orange          | #F57B4A                | -                      | 하루 마무리 이미지 · 주황 노을
+sunset-gold            | #F6A03D                | -                      | 하루 마무리 이미지 · 금빛 노을
+sunset-glow            | #FBC97A                | -                      | 하루 마무리 이미지 · 수평선 빛 · 노을 화면 그래프 선
+evening-sea            | #3E8E96                | -                      | 하루 마무리 이미지 · 저녁 바다
+evening-sea-deep       | #1E4B66                | -                      | 하루 마무리 이미지 · 깊은 저녁 바다
+whale                  | #22384A                | -                      | 하루 마무리 이미지 · 고래 꼬리 · 노을 화면 주 버튼
+evening-foam           | #FFE8D2                | -                      | 하루 마무리 이미지 · 노을 물거품
+evening-bg             | #FFF9F4                | -                      | 하루 마무리 이미지 · 노을 화면 아래 시트 바탕
+evening-ink-muted      | #6B5A63                | -                      | 하루 마무리 이미지 · 노을 시트 위 보조 글자(6:1)
+
+[11. 조개 펜던트 (오각형 그래프)]
+pendant-gold-hi        | #F7E3A1                | -                      | 조개 펜던트 오각형 · 펜던트 금테 밝은 쪽
+pendant-gold           | #D9B45A                | -                      | 조개 펜던트 오각형 · 펜던트 금테
+pendant-gold-lo        | #A9802E                | -                      | 조개 펜던트 오각형 · 펜던트 금테 그늘
+pendant-line           | #9C7A3C                | -                      | 조개 펜던트 오각형 · 중요도 점선 · 눈금(3.6:1)
+pendant-pearl          | #FAF6EE                | -                      | 조개 펜던트 오각형 · 진주 에나멜 판
+pendant-pearl-edge     | #EFE7DA                | -                      | 조개 펜던트 오각형 · 진주 판 가장자리
+pendant-resin          | #7FC4C6                | -                      | 조개 펜던트 오각형 · 실천률 레진 면(55%)
+pendant-resin-sand     | #EAD9B8                | -                      | 조개 펜던트 오각형 · 레진 아래쪽 모래빛
+pendant-resin-line     | #2E7B7E                | -                      | 조개 펜던트 오각형 · 실천률 선 2px(진주 판 4.5:1 이상)
+pendant-point          | #F3EEF6                | -                      | 조개 펜던트 오각형 · 진주 꼭짓점
+
+[12. 메시지 보틀 (한 줄 메모)]
+bottle-glass           | #E6F4F3                | -                      | 메시지 보틀 · 병 유리(반투명)
+bottle-glass-line      | #9CC6C4                | -                      | 메시지 보틀 · 병 윤곽
+bottle-cork            | #B27A45                | -                      | 메시지 보틀 · 코르크
+bottle-twine           | #C49A63                | -                      | 메시지 보틀 · 끈
+scroll-paper           | #F1E0BF                | -                      | 메시지 보틀 · 두루마리 종이
+scroll-paper-hi        | #FBF1DE                | -                      | 메시지 보틀 · 두루마리 밝은 면
+scroll-roll            | #C9A56E                | -                      | 메시지 보틀 · 두루마리 말린 끝
+scroll-ink             | #4A3420                | -                      | 메시지 보틀 · 두루마리 글자(9:1)
+scroll-muted           | #9C7E5A                | -                      | 메시지 보틀 · 두루마리 글자 수 표시
+
+[13. 글자]
+글꼴: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif
+display    |  28px / 줄간  36px / 굵기 800 / 자간 -0.02em | 예: 반가워요. 나를 지키는 기준부터 | S01 첫 문장, 완료 화면.
+title      |  22px / 줄간  30px / 굵기 800 / 자간 -0.01em | 예: 요즘 가장 지키고 싶은 영역은? | 화면 제목 S02–S09.
+heading    |  17px / 줄간  24px / 굵기 700 | 예: 오늘의 다섯 영역 | 카드 제목, 영역 묶음 이름.
+item       |  15px / 줄간  22px / 굵기 600 | 예: 어젯밤 7시간 이상 잤나요? | S05 체크 문항. 25자 안팎.
+body       |  14px / 줄간  21px / 굵기 400 | 예: 관계를 챙긴 날 컨디션이 평균 0.8점 높았어요 | AI 리포트 문장, 설명.
+caption    |  12px / 줄간  17px / 굵기 500 | 예: 근거 보기 · 7일 vs 6일 | 날짜, 범례, 근거, 보조 정보.
+micro      |  11px / 줄간  14px / 굵기 600 | 예: 일 월 화 수 목 금 토 | 요일 줄, 차트 축. 이보다 작게 쓰지 않음.
+num-xl     |  40px / 줄간  44px / 굵기 800 / 자간 -0.02em | 예: 93% | 물결 게이지 가운데 숫자, 타이머 남은 시간. 숫자는 tabular.
+num-l      |  24px / 줄간  28px / 굵기 800 | 예: 12/31 | S08 이달의 숫자 4칸.
+
+[14. 간격]
+space-1            | 4px | 아이콘과 글자 사이.
+space-2            | 8px | 항목 카드 사이, 칩 간격.
+space-3            | 12px | 카드 안쪽 위아래.
+space-4            | 16px | 카드 안쪽 좌우, 영역 묶음 사이.
+space-5            | 20px | 화면 좌우 여백.
+space-6            | 24px | 섹션 사이.
+space-8            | 32px | 화면 위 큰 여백, 온보딩 문단 사이.
+
+[15. 모서리]
+radius-pixel       | 2px | 진행률 타임라인 한 칸(십자수 느낌).
+radius-item        | 14px | 체크 항목 카드, 입력 칸.
+radius-card        | 20px | 리포트 카드, 오늘의 카드.
+radius-sheet       | 28px | 바텀시트 위 모서리.
+radius-pill        | 999px | 칩, 세그먼트, 주 버튼(알약).
+
+[16. 컴포넌트 크기]
+touch-min          | 44px | 모든 탭 영역 최소.
+cycle-btn          | 28px | 순환 버튼 지름. 탭 영역은 행 전체(52px).
+cycle-ring-miss    | 2.5px | 못 했음 테두리 굵기.
+cycle-ring-empty   | 1.4px | 미입력 점선 굵기(대시 3 · 간격 2.5).
+week-ring          | 30px | S05 주간 줄 원 지름. 5칸 호 굵기 3.2px, 칸 사이 10°.
+icon-domain        | 24px | 영역 아이콘 기본. 요약 줄 20px.
+pixel-year         | 10px | 연간 진행률 타임라인 한 칸(격자선 1px 포함 11px).
+pixel-week         | 8px | 영역별 진행률 타임라인 한 칸(한 주).
+pixel-sand-dot     | 40% | 기록 없는 날 모래 점 = 칸의 40%.
+gauge-s            | 56px | 작은 물결 게이지(S05 오늘 진행, S08 기록률).
+gauge-l            | 168px | 큰 물결 게이지·타이머(실험 타이머).
+gauge-ring-w       | 6px | 타이머 링 굵기.
+chart-stroke       | 2px | 꺾은선 굵기. 비교선은 1.5px.
+chart-point-r      | 3px | 꺾은선 점 반지름. 최고점 5px.
+kelp-w             | 4px | 해초 막대 줄기 굵기.
+
+[17. 불투명도]
+opacity-wave-back  | 0.75 | 물결 게이지 뒤 파도.
+opacity-compare    | 0.45 | 꺾은선에서 선택하지 않은 영역 선.
+opacity-faint      | 0.35 | 입력 전 영역 아이콘(흐림).
+
+[18. 그림자]
+shadow-card        | 라이트 0 1px 2px rgba(0,29,57,0.06), 0 6px 20px rgba(0,29,57,0.06) / 다크 none | 흰 바탕 위 카드. 다크에서는 그림자 대신 surface 단계로.
+shadow-gauge       | inset 0 -8px 24px rgba(0,29,57,0.35) | 물결 게이지 원 안쪽 깊이감.
+shadow-glow        | 0 0 10px rgba(123,189,232,0.55) | 꺾은선 최고점, 타이머 링 끝 빛. 깊은 카드 위에서만.
+
+[19. 지켜야 할 규칙]
+- 영역은 색만으로 구분하지 않는다. 아이콘 + 이름 + 고정 순서(건강→성장→관계→회복→재정).
+- 기록 없는 날 = 모래 작은 점(칸의 40%), 0개 영역 날 = 꽉 찬 물거품 칸 + 테두리. 크기부터 다르게.
+- 물결 게이지 숫자는 24px 이상 + 가장자리 그림자. 물 높이만으로 값을 전하지 않는다.
+- 물(파란 그라데이션) 위에 본문 글자를 얹지 않는다. 글자는 모래·흰 바탕 위에.
+- 실패를 빨강·경고색으로 칠하지 않는다. 낮은 값도 같은 바다색.
+- 움직임은 파도·차오름에만, 4초 주기 이하, 동작 줄이기 설정이면 멈춤.
+- 하루를 닫는 화면(S06–S10)은 노을 팔레트. 글자는 노을 시트(evening-bg) 위, 노을 하늘 위 흰 글자에는 그림자.
+- 씨글라스 조각 모양은 영역마다 고정(건강 물방울 · 성장 잎 · 관계 둥근 세모 · 회복 둥근 조약돌 · 재정 둥근 네모).
+- 한 줄 메모는 본인만 열람. 완료 화면·공유 이미지에 메모 글자를 넣지 않는다.
+- 본문 글자 대비 4.5:1, 24px 이상 숫자·테두리·아이콘 3:1 이상(두 테마 모두).
+
+[20. CSS 변수 (복사해서 붙여 넣기)]
+:root, [data-theme="light"] {
+  --ocean-950: #001D39;
+  --ocean-800: #0A4174;
+  --ocean-600: #49769F;
+  --teal-600: #4E8EA2;
+  --teal-400: #6EA2B3;
+  --sky-400: #7BBDE8;
+  --sky-200: #BDD8E9;
+  --navy-700: #2F4156;
+  --teal-700: #567C8D;
+  --mist-200: #C8D9E6;
+  --sand-100: #F5EFEB;
+  --slate-500: #5E7892;
+  --mist-400: #A7B7C6;
+  --shell-100: #F3EFDF;
+  --kelp-200: #BDCFAA;
+  --kelp-500: #8E9E83;
+  --coral-500: #E2683C;
+  --sun-400: #F2C14E;
+  --bg: #FFFFFF;
+  --surface: #F2F6F9;
+  --surface-deep: #001D39;
+  --surface-shell: #F3EFDF;
+  --surface-sand: #F5EFEB;
+  --ink: #001D39;
+  --ink-muted: #5E7892;
+  --ink-on-sand: #2F4156;
+  --ink-on-deep: #FFFFFF;
+  --ink-on-deep-muted: #BDD8E9;
+  --line: #DCE6EE;
+  --line-control: #5E7892;
+  --action: #0A4174;
+  --on-action: #FFFFFF;
+  --focus: #4E8EA2;
+  --domain-health: #E47567;
+  --domain-grow: #9BCF9A;
+  --domain-rel: #EDBC59;
+  --domain-rest: #5BC0C3;
+  --domain-money: #A481C2;
+  --domain-health-strong: #C53523;
+  --domain-grow-strong: #3E7F3C;
+  --domain-rel-strong: #936810;
+  --domain-rest-strong: #2E7B7E;
+  --domain-money-strong: #8B5EB1;
+  --domain-health-soft: #E4756722;
+  --domain-grow-soft: #9BCF9A22;
+  --domain-rel-soft: #EDBC5922;
+  --domain-rest-soft: #5BC0C322;
+  --domain-money-soft: #A481C222;
+  --on-domain: #001D39;
+  --on-domain-money: #001D39;
+  --state-empty: #7F95A9;
+  --state-na: #5E7892;
+  --depth-0: #FFFFFF;
+  --depth-0-line: #5E7892;
+  --depth-1: #BDD8E9;
+  --depth-2: #7BBDE8;
+  --depth-3: #4E8EA2;
+  --depth-4: #0A4174;
+  --depth-5: #001D39;
+  --depth-sand: #D9CBBE;
+  --pixel-grid: #E6EDF2;
+  --cond-1: #C8D9E6;
+  --cond-2: #A7B7C6;
+  --cond-3: #6EA2B3;
+  --cond-4: #49769F;
+  --cond-5: #0A4174;
+  --chart-line: #4E8EA2;
+  --chart-line-deep: #7BBDE8;
+  --chart-point: #BDD8E9;
+  --chart-dropline: rgba(123,189,232,0.28);
+  --chart-area: rgba(78,142,162,0.38);
+  --chart-target: #A7B7C6;
+  --chart-lowdata: #BDD8E9;
+  --gauge-shell: #0A4174;
+  --gauge-wave-back: #7BBDE8;
+  --gauge-wave-front: #4E8EA2;
+  --gauge-ring: #6EA2B3;
+  --gauge-track: #1E3A57;
+  --kelp-stem: #8E9E83;
+  --kelp-leaf: #BDCFAA;
+  --shore-sand: #F5EFEB;
+  --shore-foam: #FFFFFF;
+  --shore-shallow: #BDD8E9;
+  --shore-water: #7BBDE8;
+  --shore-deep: #4E8EA2;
+  --glass-rim-health: #E37061;
+  --glass-rim-grow: #51A64F;
+  --glass-rim-rel: #C28915;
+  --glass-rim-rest: #3CA0A3;
+  --glass-rim-money: #A481C2;
+  --glass-clear: #F4F6F6;
+  --glass-clear-rim: #A9B6C2;
+  --dusk-900: #3E3A66;
+  --dusk-700: #6E4E7E;
+  --dusk-500: #A3586F;
+  --sunset-coral: #E36854;
+  --sunset-orange: #F57B4A;
+  --sunset-gold: #F6A03D;
+  --sunset-glow: #FBC97A;
+  --evening-sea: #3E8E96;
+  --evening-sea-deep: #1E4B66;
+  --whale: #22384A;
+  --evening-foam: #FFE8D2;
+  --evening-bg: #FFF9F4;
+  --evening-ink-muted: #6B5A63;
+  --pendant-gold-hi: #F7E3A1;
+  --pendant-gold: #D9B45A;
+  --pendant-gold-lo: #A9802E;
+  --pendant-line: #9C7A3C;
+  --pendant-pearl: #FAF6EE;
+  --pendant-pearl-edge: #EFE7DA;
+  --pendant-resin: #7FC4C6;
+  --pendant-resin-sand: #EAD9B8;
+  --pendant-resin-line: #2E7B7E;
+  --pendant-point: #F3EEF6;
+  --bottle-glass: #E6F4F3;
+  --bottle-glass-line: #9CC6C4;
+  --bottle-cork: #B27A45;
+  --bottle-twine: #C49A63;
+  --scroll-paper: #F1E0BF;
+  --scroll-paper-hi: #FBF1DE;
+  --scroll-roll: #C9A56E;
+  --scroll-ink: #4A3420;
+  --scroll-muted: #9C7E5A;
+  --shadow-card: 0 1px 2px rgba(0,29,57,0.06), 0 6px 20px rgba(0,29,57,0.06);
+  --shadow-gauge: inset 0 -8px 24px rgba(0,29,57,0.35);
+  --shadow-glow: 0 0 10px rgba(123,189,232,0.55);
+}
+[data-theme="dark"] {
+  --bg: #001D39;
+  --surface: #0B2A47;
+  --surface-deep: #0B2A47;
+  --surface-shell: #14324F;
+  --surface-sand: #0B2A47;
+  --ink: #EAF2F8;
+  --ink-muted: #A7B7C6;
+  --ink-on-sand: #C8D9E6;
+  --line: #1E3A57;
+  --line-control: #6EA2B3;
+  --action: #7BBDE8;
+  --on-action: #001D39;
+  --focus: #7BBDE8;
+  --domain-health-strong: #E47567;
+  --domain-grow-strong: #9BCF9A;
+  --domain-rel-strong: #EDBC59;
+  --domain-rest-strong: #5BC0C3;
+  --domain-money-strong: #A481C2;
+  --domain-health-soft: #E4756729;
+  --domain-grow-soft: #9BCF9A29;
+  --domain-rel-soft: #EDBC5929;
+  --domain-rest-soft: #5BC0C329;
+  --domain-money-soft: #A481C229;
+  --state-empty: #8A9DB0;
+  --state-na: #A7B7C6;
+  --depth-0: #001D39;
+  --depth-0-line: #6EA2B3;
+  --depth-1: #17456B;
+  --depth-2: #2E6E97;
+  --depth-3: #4E8EA2;
+  --depth-4: #7BBDE8;
+  --depth-5: #BDD8E9;
+  --depth-sand: #566779;
+  --pixel-grid: #12324F;
+  --cond-1: #2F4156;
+  --cond-2: #567C8D;
+  --cond-3: #6EA2B3;
+  --cond-4: #7BBDE8;
+  --cond-5: #BDD8E9;
+  --chart-line: #6EA2B3;
+  --chart-lowdata: #5E7892;
+  --gauge-shell: #0B2A47;
+  --gauge-ring: #7BBDE8;
+  --kelp-leaf: #8E9E83;
+  --shore-sand: #0B2A47;
+  --shore-foam: #14324F;
+  --shore-shallow: #17456B;
+  --shore-water: #2E6E97;
+  --shore-deep: #4E8EA2;
+  --shadow-card: none;
+}
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 20px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --radius-pixel: 2px;
+  --radius-item: 14px;
+  --radius-card: 20px;
+  --radius-sheet: 28px;
+  --radius-pill: 999px;
+  --touch-min: 44px;
+  --cycle-btn: 28px;
+  --cycle-ring-miss: 2.5px;
+  --cycle-ring-empty: 1.4px;
+  --week-ring: 30px;
+  --icon-domain: 24px;
+  --pixel-year: 10px;
+  --pixel-week: 8px;
+  --pixel-sand-dot: 40%;
+  --gauge-s: 56px;
+  --gauge-l: 168px;
+  --gauge-ring-w: 6px;
+  --chart-stroke: 2px;
+  --chart-point-r: 3px;
+  --kelp-w: 4px;
+  --opacity-wave-back: 0.75;
+  --opacity-compare: 0.45;
+  --opacity-faint: 0.35;
+  --font-sans: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
+}
