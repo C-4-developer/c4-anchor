@@ -166,6 +166,10 @@
   --font-sans: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", system-ui, sans-serif;
 }
 /* 토큰 원본에는 다크(심해) 값도 있다. 기획안 v2.0에 테마 전환이 없어서 시연판은 라이트만 쓴다. */
+/* 최근 4주 기록의 농도 4단계만 토큰 원본과 다르게 쓴다(2026-10-06 팀 결정, 안 B).
+   원본은 3단계만 청록이고 밝기 간격이 고르지 않아 어느 날이 더 많이 채운 날인지 읽기 어려웠다.
+   한 가지 파랑으로 맞추고 밝기만 단계적으로 내린다. 위 토큰 블록은 원본 그대로 두고 여기서 덮어쓴다. */
+:root{--depth-1:#C6E0F2;--depth-2:#84B6E3;--depth-3:#3F86C9;--depth-4:#0A4F92}
 
 /* ───────── 바탕 ───────── */
 :root{box-sizing:border-box;color-scheme:light;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}

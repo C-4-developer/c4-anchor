@@ -224,8 +224,8 @@ add('③-7', '1장 ③ 표 7·8', '남은 항목 = 미입력 수, 0이면 “다
   for (const id of ['i02', 'i03', 'i05', 'i06', 'i08', 'i09', 'i11', 'i12', 'i14', 'i15']) { await p.click(`[data-a="cycle"][data-id="${id}"]`).catch(async () => { for (const f of await p.$$('.fold')) await f.click(); await cyc(p, id) }); }
   assert((await p.textContent('.dock .left')) === '다 입력했어요'); return '11개로 시작해 누를 때마다 줄고, 하나만 입력하고 마무리해도 나머지는 빈 채로 남음. 다 채우면 “다 입력했어요”';
 });
-add('③-9', '1장 ③ 표 9 · 전제', '하단 탭은 오늘 · 리포트 2개', async () => {
-  const p = await open(); await sample(p, 'dotori'); assert.equal(await p.$$eval('.tabbar button', x => x.map(e => e.textContent).join(',')), '오늘,리포트');
+add('③-9', '1장 ③ 표 9 · 전제', '하단 탭 2개. 기획안 표기는 ‘오늘 · 리포트’이고, 팀 결정(10/6)으로 ‘기록 · 주간 리포트’로 바꿈', async () => {
+  const p = await open(); await sample(p, 'dotori'); assert.equal(await p.$$eval('.tabbar button', x => x.map(e => e.textContent).join(',')), '기록,주간 리포트');
   await p.click('[data-a="tab"][data-v="report"]'); assert.equal(await view(p), 'report'); await p.click('[data-a="tab"][data-v="today"]'); assert.equal(await view(p), 'today'); return '탭 2개로 두 화면을 오감';
 });
 add('③-일', '1장 ③ 일요일 · 2장 주', '일요일: 주간 항목이 맨 위 ‘지난주 돌아보기’ 묶음으로 나오고, 지난주(일–토) 기록으로 저장', async () => {
@@ -322,12 +322,12 @@ add('⑤-4', '1장 ⑤ 표 4', '요일별 컨디션: 해초 막대 높이 = 컨�
 add('⑤-5', '1장 ⑤ 표 5 · 완료 기준 6', '최근 4주 기록: 하루 한 칸. 진하기 = 채운 영역 수, 기록 없는 날 = 작은 모래 점, 체크만 한 날 = 반원, 0개 영역 날 = 테두리만 있는 큰 원, 아직 안 온 날 = 비움. 범례 항상 표시', async () => {
   const p = await open(); await sample(p, 'dotori'); await p.click('[data-a="tab"][data-v="report"]');
   const cells = await p.$$eval('.strip .c', x => x.map(e => { const i = e.querySelector('i'); if (!i) return 'x'; const r = i.getBoundingClientRect(), c = getComputedStyle(i); return (i.className || 'full') + ':' + Math.round(r.width) + 'x' + Math.round(r.height) + ':' + c.backgroundColor }));
-  assert.equal(cells.length, 28); const depth = ['', 'rgb(189, 216, 233)', 'rgb(123, 189, 232)', 'rgb(78, 142, 162)', 'rgb(10, 65, 116)', 'rgb(0, 29, 57)'];
+  assert.equal(cells.length, 28); const depth = ['', 'rgb(198, 224, 242)', 'rgb(132, 182, 227)', 'rgb(63, 134, 201)', 'rgb(10, 79, 146)', 'rgb(0, 29, 57)']; // 팀 결정(10/6): 한 가지 파랑, 밝기만 단계적으로. 토큰 원본의 1–4단계 값과 다름
   ['-3', '-2', '-1', '0'].forEach((w, wi) => VIZ.strip[w].forEach((c, i) => { const got = cells[wi * 7 + i]; if (c.s === 'none') assert(got.startsWith('none:9x9'), w + i + got); else if (c.s === 'partial') assert(got.startsWith('partial:22x11') && got.endsWith(depth[c.n]), w + i + got); else if (c.s === 'closed') assert(got.includes(':22x22:') && got.endsWith(depth[c.n]), w + i + got); else if (c.s === 'future') assert.equal(got, 'x'); }));
   assert(cells[25].startsWith('today') || cells[25].includes('today'), '오늘 칸'); const lg = await p.textContent('.legend'); assert(lg.includes('채운 영역 1–5') && lg.includes('0개 영역') && lg.includes('체크만') && lg.includes('기록 없음'));
   const q = await open(); await setup(q, { name: '밤톨' }); await cyc(q, 'i01'); await cyc(q, 'i01'); await closeDay(q, 2); await q.waitForTimeout(2300); await q.click('[data-a="tab"][data-v="report"]');
   const z = await q.$eval('.strip i.today', i => i.className + ':' + getComputedStyle(i).backgroundColor + ':' + getComputedStyle(i).borderTopColor); assert(z.startsWith('zero today:rgb(255, 255, 255):rgb(94, 120, 146)'), z);
-  return '28칸이 기획안 4주 기록과 한 칸씩 같음(색 5단계, 2주 전 화–목 9px 모래 점, 체크만 한 날 반원, 금·토 빈칸). 못 했음만 있는 날은 테두리만 있는 큰 원';
+  return '28칸이 기획안 4주 기록과 한 칸씩 같음(색 5단계는 팀 결정으로 한 가지 파랑의 밝기 단계, 2주 전 화–목 9px 모래 점, 체크만 한 날 반원, 금·토 빈칸). 못 했음만 있는 날은 테두리만 있는 큰 원';
 });
 add('⑤-6', '1장 ⑤ 표 6 · 완료 기준 6', '발견한 패턴 최대 2개, 근거 날 수 함께. 빈 구간이 있던 주는 ‘빈 구간 읽기’ 카드가 맨 위', async () => {
   const p = await open(); await sample(p, 'dotori'); await p.click('[data-a="tab"][data-v="report"]'); let pats = await p.$$eval('.pat', x => x.map(e => e.innerText.replace(/\n/g, ' / ')));
@@ -413,7 +413,7 @@ add('기술-2', '5장 기술 전제 · 토큰 규칙', '모바일 우선(기준 
 });
 add('전제-탭', '한눈에 보기 전제 · 5장 만들지 않는 것', '화면 5개, 하단 탭 2개. 알림·월간·연간·메모 모아 보기·하루 흐름순·7일 줄·타이머·직접 추가·빈도 바꾸기·AI 호출이 없음', async () => {
   const p = await open(); await sample(p, 'dotori'); let all = await txt(p); await p.click('[data-a="tab"][data-v="report"]'); all += await txt(p); await p.click('[data-a="tab"][data-v="today"]'); await p.click('[data-a="toClose"]'); all += await txt(p);
-  for (const s of ['월간', '지도', '설정', '타이머', '하루 흐름순', '직접 추가', '알림', 'AI']) assert(!all.includes(s), s); return '오늘·마무리·리포트 화면 어디에도 해당 메뉴나 버튼이 없음';
+  for (const s of ['월간', '지도', '설정', '타이머', '하루 흐름순', '직접 추가', '알림', 'AI']) assert(!all.includes(s), s); return '기록·마무리·주간 리포트 화면 어디에도 해당 메뉴나 버튼이 없음';
 });
 
 // 사람이 봐야 하는 것

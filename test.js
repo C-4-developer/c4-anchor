@@ -177,5 +177,15 @@ let pass=0;const ok=(c,m)=>{assert(c,m);pass++;};
   { const css=fs.readFileSync('src/style.css','utf8'),js=fs.readFileSync('src/app.js','utf8');
     ok(/\.safe \.btn\.solid\{background:var\(--ink\);color:#fff\}/.test(css)&&/<button class="btn solid" data-a="resetYes">지우기<\/button>/.test(js),'confirm dialog: delete button has visible label');
     ok(!/<button[^>]*style="[^"]*(background|color)/.test(js),'no inline colors on buttons'); }
+  // 팀 결정(2026-10-06): 탭 이름은 기록 · 주간 리포트, 4주 기록 농도는 한 색상으로 밝기만 단계적으로
+  { const css=fs.readFileSync('src/style.css','utf8'),js=fs.readFileSync('src/app.js','utf8');
+    ok(/>기록<\/button><button data-a="tab" data-v="report"[^>]*>주간 리포트<\/button>/.test(js.replace(/'\+\([^)]*\)\+'/g,'')),'tab labels: 기록 · 주간 리포트');
+    ok(!/오늘 체크로|오늘 체크하러/.test(js),'no leftover buttons naming the old tab');
+    const m=/:root\{--depth-1:(#\w{6});--depth-2:(#\w{6});--depth-3:(#\w{6});--depth-4:(#\w{6})\}/.exec(css);ok(!!m,'depth override block');
+    const L=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16)/255).map(v=>v<=.04045?v/12.92:Math.pow((v+.055)/1.055,2.4));const Y=.2126*c[0]+.7152*c[1]+.0722*c[2];return 116*Math.cbrt(Y)-16};
+    const hue=h=>{const c=[1,3,5].map(i=>parseInt(h.slice(i,i+2),16));return c[2]>c[1]&&c[1]>c[0]};
+    const ramp=[m[1],m[2],m[3],m[4],'#001D39'],ls=ramp.map(L),st=ls.slice(1).map((v,i)=>ls[i]-v);
+    ok(st.every(d=>d>=14&&d<=25),'depth ramp: each step darker by a similar amount '+st.map(d=>d.toFixed(0)).join(','));
+    ok(ramp.slice(0,4).every(hue),'depth ramp: one blue hue (no teal step)'); }
   console.log('PASS',pass);
 })().catch(e=>{console.error('FAIL after',pass,e.stack.split('\n').slice(0,3).join(' | '));process.exit(1)});

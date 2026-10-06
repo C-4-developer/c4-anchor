@@ -185,7 +185,7 @@ function sayLabel(it,date){var m=/^(.*?)\{.+?\}/.exec(TPL[it.template].q),h=it.h
   for(var i=0;i<h.length;i++)if(h[i].from<=date)tg=h[i].target;return (m[1]+tg).trim()}
 function toast(t){S.toast=t;renderSheet();clearTimeout(timers.toast);timers.toast=setTimeout(function(){S.toast=null;renderSheet()},2200)}
 function go(view){S.view=view;S.sheet=null;render();try{window.scrollTo(0,0)}catch(e){}}
-function tabbar(cur){return '<nav class="tabbar" aria-label="하단 탭"><button data-a="tab" data-v="today"'+(cur==='today'?' aria-current="page"':'')+'>오늘</button><button data-a="tab" data-v="report"'+(cur==='report'?' aria-current="page"':'')+'>리포트</button></nav>'}
+function tabbar(cur){return '<nav class="tabbar" aria-label="하단 탭"><button data-a="tab" data-v="today"'+(cur==='today'?' aria-current="page"':'')+'>기록</button><button data-a="tab" data-v="report"'+(cur==='report'?' aria-current="page"':'')+'>주간 리포트</button></nav>'}
 var WAVE='<svg viewBox="0 0 390 34" preserveAspectRatio="none" aria-hidden="true"><path d="M0 12C45 2 85 4 130 12S215 24 262 12S345 0 390 10V34H0Z" style="fill:var(--shore-foam)"/><path d="M0 22C50 12 92 14 140 22S228 32 276 22S350 12 390 20V34H0Z" style="fill:var(--shore-sand)"/></svg>';
 
 /* ───────── ① 시작 ───────── */
@@ -283,7 +283,7 @@ function vClose(){var c=S.close,date=c.date,t=TODAY(),h='',skipN=[],skipC=0,day=
     streaks([[236,182,84,7,'sunset-gold',.6],[300,193,70,5,'sunset-coral',.35]])+
     '<rect y="206" width="390" height="56" style="fill:var(--evening-sea)"/>'+
     streaks([[20,216,90,4,'evening-sea-deep',.5],[240,212,110,4,'sunset-glow',.6],[262,222,70,3,'sunset-coral',.5],[120,220,80,4,'evening-sea-deep',.45]])+'</svg>'+
-    '<div class="in"><button class="back" data-a="tab" data-v="today">‹ 오늘 체크로</button><h1>'+day+' 하루, 몸과 마음의<br>컨디션은 어땠나요?</h1></div></div><div class="sheetbody">'+
+    '<div class="in"><button class="back" data-a="tab" data-v="today">‹ 기록으로</button><h1>'+day+' 하루, 몸과 마음의<br>컨디션은 어땠나요?</h1></div></div><div class="sheetbody">'+
     '<div class="cond" role="radiogroup" aria-label="컨디션">';
   for(var v=1;v<=5;v++){h+='<button class="c'+v+'" role="radio" aria-checked="'+(c.cond===v)+'" data-a="cond" data-v="'+v+'" data-f="cond-'+v+'"><i aria-hidden="true">';
     for(var b=1;b<=5;b++)h+='<b class="'+(b<=v?'f':'')+'" style="height:'+(6+b*4.8)+'px"></b>';
@@ -359,7 +359,7 @@ function vReport(){var t=TODAY(),cur=weekStart(t),weeks=repWeeks(),ws=S.rep.ws,i
   if(idx<0){ws=S.rep.ws=cur;idx=weeks.indexOf(cur)}
   var st=weekStats(ws),rp=sampleReport(ws),isCur=ws===cur,isLast=ws===addDays(cur,-7),total=allDates().filter(function(d){return hasChecks(d)}).length;
   h+='<div class="wk"><button class="nav" data-a="wk" data-v="-1" aria-label="이전 주"'+(idx<=0?' disabled':'')+'>‹</button><b>'+md(ws)+' – '+md(addDays(ws,6))+'</b><button class="nav" data-a="wk" data-v="1" aria-label="다음 주"'+(idx>=weeks.length-1?' disabled':'')+'>›</button></div><div class="rep">';
-  if(!allDates().length){h+='<div class="card empty"><b>아직 기록이 없어요</b><p class="tiny" style="margin:4px 0 12px">오늘 체크를 하면 이번 주 차트가 채워져요</p><button class="btn whale sm" style="margin:0 auto" data-a="tab" data-v="today">오늘 체크하러 가기</button></div></div><div class="dock">'+tabbar('report')+'</div>';return h}
+  if(!allDates().length){h+='<div class="card empty"><b>아직 기록이 없어요</b><p class="tiny" style="margin:4px 0 12px">기록을 남기면 이번 주 차트가 채워져요</p><button class="btn whale sm" style="margin:0 auto" data-a="tab" data-v="today">기록하러 가기</button></div></div><div class="dock">'+tabbar('report')+'</div>';return h}
   var first=weekStart(allDates()[0])>=addDays(cur,-7),need=Math.max(1,10-total);
   var sumtxt=isCur?'이번 주 중간 점검이에요. 문장과 실험은 주가 끝나면 나와요.':rp?rp.summary:(first?'첫 주는 기록을 모으는 중이에요.':(total<10?need+'일만 더 기록하면 다음 주 리포트에 패턴이 나와요.':'이 주의 기록이에요.'));
   h+='<div class="rcard"><small>'+(st.avg?'평균 컨디션 '+st.avg+' · ':'')+'기록 '+st.recorded+'일</small><p class="sumtxt">'+esc(sumtxt)+'</p>'+pendant(st.rate,p.importance)+'<p class="cap">청록 실선 실천률 · 금색 점선 내가 정한 중요도</p></div>';
